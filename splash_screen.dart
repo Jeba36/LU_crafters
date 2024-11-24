@@ -32,12 +32,21 @@ class _SplashScreenState extends State<SplashScreen> {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
+          Opacity(
+            opacity: 0.1, // Adjust opacity as needed (0.0 to 1.0)
+            child: Image.asset(
+              'assets/images/2000e95c-16e0-4c68-9e4c-33b9ed78d6c1.jpg',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
           Image.asset(
             'assets/images/logo.jpg',
-            fit: BoxFit.fitWidth, // Fits the image only width-wise
+            fit: BoxFit.fitWidth,
             width: double.infinity,
             height: double.infinity,
-            alignment: Alignment.topCenter, // Aligns image to the top
+            alignment:Alignment.center ,
           ),
           const SafeArea(
             child: Center(
