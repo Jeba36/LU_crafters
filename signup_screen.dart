@@ -28,15 +28,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 80.0,
                 fit: BoxFit.contain,
               ),
-              const SizedBox(height: 20),
-              const Text(
-                'Sign Up',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 27.0,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
+
               const SizedBox(height: 10),
               const Text(
                 'Join the crafting community-Discover, create and shop',
@@ -138,9 +130,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: const Text(
                   'Already have an account? Log In',
                   style: TextStyle(
+              
                     color: Colors.blue,
                     fontSize: 16.0,
-                    decoration: TextDecoration.underline,
                   ),
                 ),
               ),

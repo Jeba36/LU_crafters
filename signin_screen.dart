@@ -23,23 +23,14 @@ class _SignInScreenState extends State<SignInScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Logo at the top, centered
+
               Image.asset(
                 'assets/images/logo.png',
                 width: 200.0,
                 height: 200.0,
                 fit: BoxFit.contain,
               ),
-              const SizedBox(height: 20),
 
-              const Text(
-                'Log In',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 27.0,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
               const SizedBox(height: 10),
 
               const Text(
@@ -50,10 +41,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   fontWeight: FontWeight.w400,
                 ),
               ),
-
               const SizedBox(height: 40),
 
-              // Email input field
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: TextFormField(
@@ -79,7 +69,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
               const SizedBox(height: 20),
 
-              // Password input field
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: TextFormField(
@@ -116,7 +106,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
               const SizedBox(height: 20),
 
-              // Login button
+
               SizedBox(
                 width: double.infinity,
                 child: Padding(
@@ -150,14 +140,13 @@ class _SignInScreenState extends State<SignInScreen> {
 
               GestureDetector(
                 onTap: () {
-                  // Navigate to Forgot Password screen or handle the event here
+
                 },
                 child: const Text(
                   'Forgot Password?',
                   style: TextStyle(
                     color: Colors.blue,
                     fontSize: 16.0,
-                    decoration: TextDecoration.underline,
                   ),
                 ),
               ),
@@ -166,7 +155,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
               GestureDetector(
                 onTap: () {
-                  // Navigate to SignUpScreen
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const SignUpScreen()),
@@ -177,7 +166,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   style: TextStyle(
                     color: Colors.blue,
                     fontSize: 16.0,
-                    decoration: TextDecoration.underline,
                   ),
                 ),
               ),
