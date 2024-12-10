@@ -1,29 +1,37 @@
-import 'package:flutter/cupertino.dart';
+import 'package:app1/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart'; // For `kIsWeb`
 
-main(){
-  runApp(const MyApp());//app is constant.
-}
-
-class MyApp extends StatelessWidget{
-
-  const MyApp({super.key});//constructor for constant app.
-
-  @override//build method returns widgets
-  Widget build(BuildContext context) {
-    return const MaterialApp(home:HomeActivity()); //not changeable
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: "AIzaSyAqTr3diaVvMPr2DDaBNyhtBEePkWdhABs",
+        authDomain: "lu-crafters-719da.firebaseapp.com",
+        projectId: "lu-crafters-719da",
+        storageBucket: "lu-crafters-719da.appspot.com",
+        messagingSenderId: "721149580896",
+        appId: "1:721149580896:web:cab7b89dc6d16d0a541505",
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
   }
+
+  runApp(MyApp());
 }
 
-class HomeActivity extends StatelessWidget{//activity page created
-  const HomeActivity({super.key});
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(//content of a page in scaffold
-      appBar: AppBar(title: Text("LU_Crafters"),backgroundColor: Colors.blue,),
-      body: Text("LU crafters"),
-
+    return MaterialApp(
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
+      home: const SplashScreen(),
     );
   }
 }

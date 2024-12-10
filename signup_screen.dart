@@ -1,5 +1,9 @@
 import 'package:app1/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../HomeScreen/Home_screen.dart';
+import 'home.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -10,7 +14,53 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _numberController = TextEditingController();
+  final TextEditingController _studentIdController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
   bool _obscurePassword = true;
+  bool _isLoading = false;
+
+  Future<void> _signUp() async {
+    if (_formKey.currentState!.validate()) {
+      if (_passwordController.text != _confirmPasswordController.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Passwords do not match")),
+        );
+        return;
+      }
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        await _auth.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+
+        // Navigate to Home Screen after successful signup
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? 'An error occurred')),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +78,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 80.0,
                 fit: BoxFit.contain,
               ),
-
               const SizedBox(height: 10),
               const Text(
                 'Join the crafting community-Discover, create and shop',
@@ -44,6 +93,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Column(
                   children: [
                     _buildTextField(
+                      controller: _nameController,
                       label: 'Enter your Name',
                       icon: Icons.person,
                       validator: (value) => value == null || value.isEmpty
@@ -52,14 +102,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     const SizedBox(height: 20),
                     _buildTextField(
+                      controller: _emailController,
                       label: 'Enter your Email',
                       icon: Icons.email,
-                      validator: (value) => value == null || value.isEmpty
-                          ? 'Please enter your email'
-                          : null,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                          return 'Enter a valid email';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 20),
                     _buildTextField(
+                      controller: _numberController,
                       label: 'Enter your Number',
                       icon: Icons.phone,
                       validator: (value) => value == null || value.isEmpty
@@ -68,6 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     const SizedBox(height: 20),
                     _buildTextField(
+                      controller: _studentIdController,
                       label: 'Student ID',
                       icon: Icons.person,
                       validator: (value) => value == null || value.isEmpty
@@ -76,6 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     const SizedBox(height: 20),
                     _buildPasswordField(
+                      controller: _passwordController,
                       label: 'Password',
                       validator: (value) => value == null || value.isEmpty
                           ? 'Please enter your password'
@@ -84,8 +144,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     const SizedBox(height: 20),
                     _buildPasswordField(
+                      controller: _confirmPasswordController,
                       label: 'Confirm Password',
-                      icon:Icons.lock_outline,
+                      icon: Icons.lock_outline,
                       validator: (value) => value == null || value.isEmpty
                           ? 'Please confirm your password'
                           : null,
@@ -106,12 +167,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 15.0),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // Handle sign up logic here
-                      }
-                    },
-                    child: const Text(
+                    onPressed: _isLoading ? null : _signUp,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
                       'Sign Up',
                       style: TextStyle(
                         color: Colors.white,
@@ -130,7 +189,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: const Text(
                   'Already have an account? Log In',
                   style: TextStyle(
-              
                     color: Colors.blue,
                     fontSize: 16.0,
                   ),
@@ -144,11 +202,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget _buildTextField({
+    required TextEditingController controller,
     required String label,
     required IconData icon,
     String? Function(String?)? validator,
   }) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon),
@@ -164,11 +224,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget _buildPasswordField({
+    required TextEditingController controller,
     required String label,
     String? Function(String?)? validator,
     required IconData icon,
   }) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon),
